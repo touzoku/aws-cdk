@@ -5,6 +5,7 @@ import * as kms from '@aws-cdk/aws-kms';
 import * as s3 from '@aws-cdk/aws-s3';
 import * as cdk from '@aws-cdk/core';
 import * as cxapi from '@aws-cdk/cx-api';
+import { testLegacyBehavior } from 'cdk-build-tools/lib/feature-flag';
 import * as codepipeline from '../lib';
 import { FakeBuildAction } from './fake-build-action';
 import { FakeSourceAction } from './fake-source-action';
@@ -67,9 +68,8 @@ describe('', () => {
 
       });
 
-      test('allows passing an Alias in place of the KMS Key in the replication Bucket', () => {
-        const app = new cdk.App();
-
+      // only support legacy behavior. see https://github.com/aws/aws-cdk/issues/12921
+      testLegacyBehavior('allows passing an Alias in place of the KMS Key in the replication Bucket', cdk.App, (app) => {
         const replicationRegion = 'us-west-1';
         const replicationStack = new cdk.Stack(app, 'ReplicationStack', {
           env: { region: replicationRegion, account: '123456789012' },
@@ -175,8 +175,8 @@ describe('', () => {
 
       });
 
-      test('generates ArtifactStores with the alias ARN as the KeyID', () => {
-        const app = new cdk.App();
+      // only support legacy behavior. see https://github.com/aws/aws-cdk/issues/12921
+      testLegacyBehavior('generates ArtifactStores with the alias ARN as the KeyID', cdk.App, (app) => {
         const replicationRegion = 'us-west-1';
 
         const pipelineRegion = 'us-west-2';
@@ -298,7 +298,8 @@ describe('', () => {
 
       });
 
-      test('generates the support stack containing the replication Bucket without the need to bootstrap in that environment', () => {
+      // only support legacy behavior. see https://github.com/aws/aws-cdk/issues/12921
+      testLegacyBehavior('generates the support stack containing the replication Bucket without the need to bootstrap in that environment', cdk.App, () => {
         const app = new cdk.App({
           treeMetadata: false, // we can't set the context otherwise, because App will have a child
         });
